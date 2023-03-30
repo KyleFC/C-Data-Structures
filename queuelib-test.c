@@ -1,4 +1,4 @@
-#include "queuelib.c"
+#include "queuelib.h"
 
 int main()
 {
@@ -15,5 +15,5 @@ int main()
     printf("dequeue = %d\n", dequeue(&testQueue));
     dequeue(&testQueue);
     dequeue(&testQueue);
-    dequeue(&testQueue);
+    dequeue(&testQueue); //Should print error message
 }

@@ -1,3 +1,5 @@
+#ifndef ll_header
+#define ll_header
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -15,15 +17,16 @@ typedef struct linkedlist
     node *tail;
     int count;
 } linkedlist;
-//add count
-
 
 void addToEnd(linkedlist**, int);
 void addToStart(linkedlist**, int);
 void printList(linkedlist**);
-void removeLast(linkedlist**);
-void removeFirst(linkedlist**);
+node *removeLast(linkedlist**);
+node *removeFirst(linkedlist**);
 node *findNode(linkedlist**, int);
 void insertBefore(linkedlist**, node**, int);
 void insertAfter(linkedlist**, node**, int);
 void removeNode(linkedlist**, node**);
+node* unlinkNode(linkedlist **list, int n);
+int count(linkedlist**);
+#endif

@@ -1,4 +1,4 @@
-#include "stacklib.c"
+#include "stacklib.h"
 
 int main()
 {

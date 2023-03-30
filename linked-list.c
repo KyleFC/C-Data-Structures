@@ -3,8 +3,7 @@
 #include <assert.h>
 #include "linked-list.h"
 
-void addToEnd(linkedlist** list, int data)//, node** head, int data) 
-//**head so that this function can modify the original
+void addToEnd(linkedlist** list, int data)
 {
     linkedlist *temp = *list;
     node *new = (node*) malloc(sizeof(node));
@@ -71,62 +70,40 @@ void printList(linkedlist **list)
     printf("\n");
 }
 
-void removeLast(linkedlist **list)//, node **head, node **tail)
+node* removeLast(linkedlist **list)
 {
-    //use unlink node
     linkedlist *temp = *list;
     node *curr = temp->tail;
+    
     if (curr == NULL)
-    //make sure the starting node isn't null
     {
-        return;
+        return NULL;
     }
-    else if (curr->prev == NULL )
-    {
-        temp->count -= 1;
-        temp->head = NULL;
-        temp->tail = NULL;
-        free(curr);
-        curr = NULL;
 
-        return;
-    }
+    temp->tail = curr->prev;
+    curr->prev = NULL;
     temp->count -= 1;
+    unlinkNode(list, curr->data);
 
-    node *end = curr->prev;
-    end->next = NULL;
-    //make sure the last node has next as NULL
-    free(curr);
-    curr = NULL;
-    temp->tail = end;
+    return curr;
 }
 
-void removeFirst(linkedlist **list)//, node **head, node **tail)
-//use unlink node
+node *removeFirst(linkedlist **list)
 {
     linkedlist *temp = *list;
-    node *curr = (*list)->head;
+    node *curr = temp->head;
+    
     if (curr == NULL)
-    //make sure the starting node isn't null
     {
-        return;
+        return NULL;
     }
-    else if (curr->next == NULL )
-    {
-        temp->count -= 1;
-        temp->head = NULL;
-        temp->tail = NULL;
-        free(curr);
-        curr = NULL;
-        
-        return;
-    }
-    curr->next->prev = NULL;
+
     temp->head = curr->next;
-    //set the new head and set prev to NULL
-    free(curr);
-    curr = NULL;
+    curr->next = NULL;
     temp->count -= 1;
+    unlinkNode(list, curr->data);
+
+    return curr;
 }
 
 node *findNode(linkedlist **list, int n)
@@ -178,29 +155,42 @@ void insertAfter(linkedlist **list, node **target, int data)
     curr->next = new;
 }
 
-void unlinkNode(linkedlist **list, int n)
-//return node *
+node* unlinkNode(linkedlist **list, int n)
 {
     linkedlist *temp = *list;
     node *tempnode = findNode(&temp, n);
 
-    if (tempnode->prev != NULL)
+    if (tempnode == temp->head)
     {
-        tempnode->prev->next = tempnode->next;
-        temp->count -= 1;
+        temp->head = tempnode->next;
+    }
+    else if (tempnode == temp->tail)
+    {
+        temp->tail = tempnode->prev;
+    }
+    else
+    {
+        if (tempnode->prev != NULL)
+        {
+            tempnode->prev->next = tempnode->next;
+        }
+
+        if (tempnode->next != NULL)
+        {
+            tempnode->next->prev = tempnode->prev;
+        }
     }
 
-    if (tempnode->next != NULL)
+    if (tempnode->prev != NULL || tempnode->next != NULL)
     {
-        tempnode->next->prev = tempnode->prev;
-        temp->count -= 1;
+        temp->count--;
     }
 
-    //special cases for head or tail
-    free(tempnode);
-    //don't free if returning tempnode
-    tempnode = NULL;
+    tempnode->prev = NULL;
+    tempnode->next = NULL;
+    return tempnode;
 }
+
 
 void destroyList(linkedlist **list)
 {
