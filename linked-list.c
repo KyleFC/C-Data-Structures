@@ -1,9 +1,29 @@
+/*
+ * @linked-list.c - linked list implementation
+ * @brief: This file contains the methods needed to implement a linked list and selection sort
+ *
+ * @author: Kyle C, Timmy M, Nathan M
+ * @date: March 2022
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include "linked-list.h"
 
+
+/*
+ * @brief: This function creates a new node to the end of the linked list
+ * @param: data - the data to be stored in the node
+ * @return: None
+ */
+
 void addToEnd(linkedlist** list, int data)
+/*
+ * @brief: This function creates a new node to the end of the linked list
+ * @param: data - the data to be stored in the node
+ * @return: None
+ */
 {
     linkedlist *temp = *list;
     node *new = (node*) malloc(sizeof(node));
@@ -35,7 +55,15 @@ void addToEnd(linkedlist** list, int data)
     temp->tail = new;
 }
 
+
+
+
 void addToStart(linkedlist** list, int data)
+/*
+ * @brief: This function creates a new node to the beginning of the linked list
+ * @param: data - the data to be stored in the node
+ * @return: None
+ */
 { 
     linkedlist *temp = *list;
     node *new = (node*) malloc(sizeof(node));
@@ -58,7 +86,13 @@ void addToStart(linkedlist** list, int data)
     temp->head = new;
 }
 
+
+
 void printList(linkedlist **list)
+/*
+ * @brief: This prints the linked list
+ * @param: linked list
+ */
 {
     node *curr = (*list)->head;
     printf("%d items: ", (*list)->count);
@@ -71,6 +105,11 @@ void printList(linkedlist **list)
 }
 
 node* removeLast(linkedlist **list)
+/*
+ * @brief: This function removes the last node in the linked list
+ * @param: data - the linked list
+ * @return: the removed node
+ */
 {
     linkedlist *temp = *list;
     node *curr = temp->tail;
@@ -89,6 +128,11 @@ node* removeLast(linkedlist **list)
 }
 
 node *removeFirst(linkedlist **list)
+/*
+ * @brief: This function removes the first node in the linked list
+ * @param: data - the linked list
+ * @return:The removed node
+ */
 {
     linkedlist *temp = *list;
     node *curr = temp->head;
@@ -106,7 +150,15 @@ node *removeFirst(linkedlist **list)
     return curr;
 }
 
+
+
 node *findNode(linkedlist **list, int n)
+/*
+ * @brief: This function finds the node at the given index n
+ * @param: data - the linked list
+ * @param: index - the index of the node, n
+ * @return: the index n node
+ */
 {
     node *curr = (*list)->head;
     while (curr != NULL)
@@ -121,7 +173,15 @@ node *findNode(linkedlist **list, int n)
     return NULL;
 }
 
+
+
 void insertBefore(linkedlist **list, node **target, int data)
+/*
+ * @brief: This inserts before index n
+ * @param: data - information to be stored in the node
+ * @param: index - the index of the node, n
+ * @return: None
+ */
 {
     (*list)->count += 1;
     node *curr = *target;
@@ -138,7 +198,15 @@ void insertBefore(linkedlist **list, node **target, int data)
     curr->prev = new;
 }
 
+
+
 void insertAfter(linkedlist **list, node **target, int data)
+/*
+ * @brief: This inserts after index n
+ * @param: data - information to be stored in the node
+ * @param: index - the index of the node, n
+ * @return: None
+ */
 {
     (*list)->count -= 1;
     node *curr = *target;
@@ -156,6 +224,12 @@ void insertAfter(linkedlist **list, node **target, int data)
 }
 
 node* unlinkNode(linkedlist **list, int n)
+/*
+ * @brief: This function removes node at index n
+ * @param: data - the linked list
+ * @param: index - the index of the node, n
+ * @return: the new linked list
+ */
 {
     linkedlist *temp = *list;
     node *tempnode = findNode(&temp, n);
@@ -192,7 +266,12 @@ node* unlinkNode(linkedlist **list, int n)
 }
 
 
+
 void destroyList(linkedlist **list)
+/*
+ * @brief: This function destroys the linked list
+ * @param: data - the linked list
+ */
 {
     linkedlist *temp = *list;
     while (temp->head != NULL)
@@ -201,9 +280,20 @@ void destroyList(linkedlist **list)
     }
     temp->count = 0;
 }
-//------------- C ---------------
+
+//------------- Sorting---------------
+
 void selectionSort(linkedlist **list)
+/*
+ * @brief: This function sorts the linked list
+ *
+ * Selection sort aims to sort the list by putting thr smallest value at the front
+ * and repeating the process until the list is sorted. Its an O(n^2) algorithm
+ *
+ * @param: linked list
+ */
 {
+    
     node *curr = (*list)->head;
     while (curr->next != NULL)
     {
