@@ -12,11 +12,17 @@
 #include "linked-list.h"
 
 
+int count(linkedlist * list)
 /*
- * @brief: This function creates a new node to the end of the linked list
- * @param: data - the data to be stored in the node
- * @return: None
+ * @brief: This function returns the count of nodes in a linked list
+ * @param: linked list
+ * @return: the count
  */
+{
+    int total = list->count;
+    printf(total);
+    return total;
+}
 
 void addToEnd(linkedlist** list, int data)
 /*

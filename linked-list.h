@@ -28,5 +28,5 @@ void insertBefore(linkedlist**, node**, int);
 void insertAfter(linkedlist**, node**, int);
 void removeNode(linkedlist**, node**);
 node* unlinkNode(linkedlist **list, int n);
-int count(linkedlist**);
+int count(linkedlist*);
 #endif
