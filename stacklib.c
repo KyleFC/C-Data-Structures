@@ -1,4 +1,5 @@
 #include "stacklib.h"
+#include "linked-list.c"
 
 int isEmpty(stack **st)
 {

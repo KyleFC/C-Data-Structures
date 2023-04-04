@@ -20,7 +20,7 @@ int count(linkedlist * list)
  */
 {
     int total = list->count;
-    printf(total);
+    printf("%d", total);
     return total;
 }
 
@@ -125,9 +125,6 @@ node* removeLast(linkedlist **list)
         return NULL;
     }
 
-    temp->tail = curr->prev;
-    curr->prev = NULL;
-    temp->count -= 1;
     unlinkNode(list, curr->data);
 
     return curr;
@@ -148,9 +145,6 @@ node *removeFirst(linkedlist **list)
         return NULL;
     }
 
-    temp->head = curr->next;
-    curr->next = NULL;
-    temp->count -= 1;
     unlinkNode(list, curr->data);
 
     return curr;
@@ -243,10 +237,18 @@ node* unlinkNode(linkedlist **list, int n)
     if (tempnode == temp->head)
     {
         temp->head = tempnode->next;
+        if (temp->head != NULL)
+        {
+            temp->head->prev = NULL;
+        }
     }
-    else if (tempnode == temp->tail)
+    if (tempnode == temp->tail)
     {
         temp->tail = tempnode->prev;
+        if (temp->tail != NULL)
+        {
+            temp->tail->next = NULL;
+        }
     }
     else
     {
