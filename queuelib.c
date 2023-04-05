@@ -7,6 +7,7 @@
  */
 
 #include "queuelib.h"
+#include "linked-list.c"
 
 /*
  * @brief: This boolean checks if the queue is empty

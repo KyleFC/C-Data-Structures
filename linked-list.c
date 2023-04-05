@@ -12,14 +12,24 @@
 #include "linked-list.h"
 
 
+int count(linkedlist * list)
+/*
+ * @brief: This function returns the count of nodes in a linked list
+ * @param: linked list
+ * @return: the count
+ */
+{
+    int total = list->count;
+    printf("%d", total);
+    return total;
+}
+
+void addToEnd(linkedlist** list, int data)
 /*
  * @brief: This function creates a new node to the end of the linked list
  * @param: data - the data to be stored in the node
- * @return: the new tail node
+ * @return: None
  */
-
-void addToEnd(linkedlist** list, int data)//, node** head, int data) 
-//**head so that this function can modify the original
 {
     linkedlist *temp = *list;
     node *new = (node*) malloc(sizeof(node));
@@ -52,13 +62,14 @@ void addToEnd(linkedlist** list, int data)//, node** head, int data)
 }
 
 
+
+
+void addToStart(linkedlist** list, int data)
 /*
  * @brief: This function creates a new node to the beginning of the linked list
  * @param: data - the data to be stored in the node
- * @return: the new head node
+ * @return: None
  */
-
-void addToStart(linkedlist** list, int data)
 { 
     linkedlist *temp = *list;
     node *new = (node*) malloc(sizeof(node));
@@ -81,12 +92,13 @@ void addToStart(linkedlist** list, int data)
     temp->head = new;
 }
 
+
+
+void printList(linkedlist **list)
 /*
  * @brief: This prints the linked list
  * @param: linked list
  */
-
-void printList(linkedlist **list)
 {
     node *curr = (*list)->head;
     printf("%d items: ", (*list)->count);
@@ -98,84 +110,55 @@ void printList(linkedlist **list)
     printf("\n");
 }
 
+node* removeLast(linkedlist **list)
 /*
  * @brief: This function removes the last node in the linked list
  * @param: data - the linked list
- * @return: the new linked list
+ * @return: the removed node
  */
-
-void removeLast(linkedlist **list)//, node **head, node **tail)
 {
-    //use unlink node
     linkedlist *temp = *list;
     node *curr = temp->tail;
+    
     if (curr == NULL)
-    //make sure the starting node isn't null
     {
-        return;
+        return NULL;
     }
-    else if (curr->prev == NULL )
-    {
-        temp->count -= 1;
-        temp->head = NULL;
-        temp->tail = NULL;
-        free(curr);
-        curr = NULL;
 
-        return;
-    }
-    temp->count -= 1;
+    unlinkNode(list, curr->data);
 
-    node *end = curr->prev;
-    end->next = NULL;
-    //make sure the last node has next as NULL
-    free(curr);
-    curr = NULL;
-    temp->tail = end;
+    return curr;
 }
 
+node *removeFirst(linkedlist **list)
 /*
  * @brief: This function removes the first node in the linked list
  * @param: data - the linked list
- * @return: the new linked list
+ * @return:The removed node
  */
-
-void removeFirst(linkedlist **list)//, node **head, node **tail)
-//use unlink node
 {
     linkedlist *temp = *list;
-    node *curr = (*list)->head;
+    node *curr = temp->head;
+    
     if (curr == NULL)
-    //make sure the starting node isn't null
     {
-        return;
+        return NULL;
     }
-    else if (curr->next == NULL )
-    {
-        temp->count -= 1;
-        temp->head = NULL;
-        temp->tail = NULL;
-        free(curr);
-        curr = NULL;
-        
-        return;
-    }
-    curr->next->prev = NULL;
-    temp->head = curr->next;
-    //set the new head and set prev to NULL
-    free(curr);
-    curr = NULL;
-    temp->count -= 1;
+
+    unlinkNode(list, curr->data);
+
+    return curr;
 }
 
+
+
+node *findNode(linkedlist **list, int n)
 /*
  * @brief: This function finds the node at the given index n
  * @param: data - the linked list
  * @param: index - the index of the node, n
  * @return: the index n node
  */
-
-node *findNode(linkedlist **list, int n)
 {
     node *curr = (*list)->head;
     while (curr != NULL)
@@ -190,14 +173,15 @@ node *findNode(linkedlist **list, int n)
     return NULL;
 }
 
+
+
+void insertBefore(linkedlist **list, node **target, int data)
 /*
  * @brief: This inserts before index n
  * @param: data - information to be stored in the node
  * @param: index - the index of the node, n
- * @return: the new linked list
+ * @return: None
  */
-
-void insertBefore(linkedlist **list, node **target, int data)
 {
     (*list)->count += 1;
     node *curr = *target;
@@ -214,14 +198,15 @@ void insertBefore(linkedlist **list, node **target, int data)
     curr->prev = new;
 }
 
+
+
+void insertAfter(linkedlist **list, node **target, int data)
 /*
  * @brief: This inserts after index n
  * @param: data - information to be stored in the node
  * @param: index - the index of the node, n
- * @return: the new linked list
+ * @return: None
  */
-
-void insertAfter(linkedlist **list, node **target, int data)
 {
     (*list)->count -= 1;
     node *curr = *target;
@@ -238,43 +223,63 @@ void insertAfter(linkedlist **list, node **target, int data)
     curr->next = new;
 }
 
+node* unlinkNode(linkedlist **list, int n)
 /*
  * @brief: This function removes node at index n
  * @param: data - the linked list
  * @param: index - the index of the node, n
  * @return: the new linked list
  */
-
-void unlinkNode(linkedlist **list, int n)
-//return node *
 {
     linkedlist *temp = *list;
     node *tempnode = findNode(&temp, n);
 
-    if (tempnode->prev != NULL)
+    if (tempnode == temp->head)
     {
-        tempnode->prev->next = tempnode->next;
-        temp->count -= 1;
+        temp->head = tempnode->next;
+        if (temp->head != NULL)
+        {
+            temp->head->prev = NULL;
+        }
+    }
+    if (tempnode == temp->tail)
+    {
+        temp->tail = tempnode->prev;
+        if (temp->tail != NULL)
+        {
+            temp->tail->next = NULL;
+        }
+    }
+    else
+    {
+        if (tempnode->prev != NULL)
+        {
+            tempnode->prev->next = tempnode->next;
+        }
+
+        if (tempnode->next != NULL)
+        {
+            tempnode->next->prev = tempnode->prev;
+        }
     }
 
-    if (tempnode->next != NULL)
+    if (tempnode->prev != NULL || tempnode->next != NULL)
     {
-        tempnode->next->prev = tempnode->prev;
-        temp->count -= 1;
+        temp->count--;
     }
 
-    //special cases for head or tail
-    free(tempnode);
-    //don't free if returning tempnode
-    tempnode = NULL;
+    tempnode->prev = NULL;
+    tempnode->next = NULL;
+    return tempnode;
 }
 
+
+
+void destroyList(linkedlist **list)
 /*
  * @brief: This function destroys the linked list
  * @param: data - the linked list
  */
-
-void destroyList(linkedlist **list)
 {
     linkedlist *temp = *list;
     while (temp->head != NULL)
@@ -286,6 +291,7 @@ void destroyList(linkedlist **list)
 
 //------------- Sorting---------------
 
+void selectionSort(linkedlist **list)
 /*
  * @brief: This function sorts the linked list
  *
@@ -294,9 +300,8 @@ void destroyList(linkedlist **list)
  *
  * @param: linked list
  */
-
-void selectionSort(linkedlist **list)
 {
+    
     node *curr = (*list)->head;
     while (curr->next != NULL)
     {

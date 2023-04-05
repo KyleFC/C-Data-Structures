@@ -5,6 +5,7 @@
 
 int main() 
 {
+    int testFailure = 0;
     printf("START MAIN\n");
     linkedlist *LL = (linkedlist*) malloc(sizeof(linkedlist));
     LL->head = NULL;
@@ -21,6 +22,7 @@ int main()
     } else 
     {
         printf("addToEnd(): FAILED\n");
+        testFailure = 1;
     }
 
     //Test printList
@@ -33,10 +35,19 @@ int main()
     } else 
     {
         printf("addToStart(): FAILED\n");
+        testFailure = 1;
     }
+    printList(&LL);
     //Test findNode()
     node *foundNode = findNode(&LL, 2);
-    printf("%d\n", foundNode->data);
+    if (foundNode->data == 2)
+    {
+        printf("findNode(): PASSED\n");
+    } else
+    {
+        printf("findNode(): FAILED\n");
+        testFailure = 1;
+    }
     //Test unlinkNode
     unlinkNode(&LL, 2);
     if (findNode(&LL, 2) == NULL) 
@@ -45,6 +56,7 @@ int main()
     } else 
     {
         printf("unlinkNode(): FAILED\n");
+        testFailure = 1;
     }
     //Test selectionSort()
     selectionSort(&LL);
@@ -57,15 +69,27 @@ int main()
     } else 
     {
         printf("removeFirst(): FAILED\n");
+        testFailure = 1;
     }
     //Test destroyList()
+    printList(&LL);
+    printf("Destroying list...\n");
     destroyList(&LL);
+    printList(&LL);
     if (LL->head == NULL && LL->tail == NULL) 
     {
         printf("destroyList(): PASSED\n");
     } else 
     {
         printf("destroyList(): FAILED\n");
+        testFailure = 1;
+    }
+    if (testFailure == 0)
+    {
+        printf("ALL TESTS PASSED\n");
+    } else
+    {
+        printf("UNIT TEST FAILURE\n");
     }
     return 0;
 }
