@@ -51,11 +51,6 @@ void addToEnd(linkedlist** list, int data)
     }
 
     node* end = temp->tail;
-    while (end->next != NULL)
-    //loop through the list until we reach the end
-    {
-        end = end->next;
-    }
     end->next = new;
     //set the 2nd to last node to have the new node as next
     temp->tail = new;
@@ -208,7 +203,7 @@ void insertAfter(linkedlist **list, node **target, int data)
  * @return: None
  */
 {
-    (*list)->count -= 1;
+    (*list)->count += 1;
     node *curr = *target;
     node *new = (node*) malloc(sizeof(node));
     new->data = data;
@@ -218,6 +213,10 @@ void insertAfter(linkedlist **list, node **target, int data)
     if (curr->next != NULL)
     {
         curr->next->prev = new;
+    }
+    else
+    {
+        (*list)->tail = new;
     }
 
     curr->next = new;
@@ -231,46 +230,41 @@ node* unlinkNode(linkedlist **list, int n)
  * @return: the new linked list
  */
 {
-    linkedlist *temp = *list;
-    node *tempnode = findNode(&temp, n);
+    node *tempnode = findNode(&*list, n);
 
-    if (tempnode == temp->head)
+    if (tempnode == (*list)->head)
     {
-        temp->head = tempnode->next;
-        if (temp->head != NULL)
-        {
-            temp->head->prev = NULL;
-        }
+        (*list)->head = tempnode->next;
     }
-    if (tempnode == temp->tail)
+    if (tempnode == (*list)->tail)
     {
-        temp->tail = tempnode->prev;
-        if (temp->tail != NULL)
-        {
-            temp->tail->next = NULL;
-        }
-    }
-    else
-    {
-        if (tempnode->prev != NULL)
-        {
-            tempnode->prev->next = tempnode->next;
-        }
-
-        if (tempnode->next != NULL)
-        {
-            tempnode->next->prev = tempnode->prev;
-        }
+        (*list)->tail = tempnode->prev;
     }
 
-    if (tempnode->prev != NULL || tempnode->next != NULL)
+    if (tempnode->prev != NULL && tempnode->next != NULL)
     {
-        temp->count--;
+        tempnode->prev->next = tempnode->next;
+        tempnode->next->prev = tempnode->prev;
+    }
+    else if (tempnode->next != NULL)
+    {
+        tempnode->next->prev = NULL;
+        (*list)->head = tempnode->next; // redundant
+    }
+    else if (tempnode->prev != NULL)
+    {
+        tempnode->prev->next = NULL;
+        (*list)->tail = tempnode->prev; // redundant
     }
 
-    tempnode->prev = NULL;
-    tempnode->next = NULL;
-    return tempnode;
+    (*list)->count--;
+
+    node *new = (node*) malloc(sizeof(node));
+    new->data = tempnode->data;
+
+    free(tempnode);
+
+    return new;
 }
 
 
@@ -281,12 +275,15 @@ void destroyList(linkedlist **list)
  * @param: data - the linked list
  */
 {
-    linkedlist *temp = *list;
-    while (temp->head != NULL)
-    {
-        removeLast(&temp);
+    node *curr = (*list)->head;
+    while (curr != NULL) {
+        node *temp = curr;
+        curr = curr->next;
+        free(temp);
     }
-    temp->count = 0;
+    (*list)->head = NULL;
+    (*list)->tail = NULL;
+    (*list)->count = 0;
 }
 
 //------------- Sorting---------------
