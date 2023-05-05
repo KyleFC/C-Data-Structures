@@ -71,6 +71,16 @@ int main()
         printf("removeFirst(): FAILED\n");
         testFailure = 1;
     }
+    //Test removeLast()
+    removeLast(&LL);
+    if (LL->head->data == 4)
+    {
+        printf("removeLast(): PASSED\n");
+    } else
+    {
+        printf("removeLast(): FAILED\n");
+        testFailure = 1;
+    }
     //Test destroyList()
     printList(&LL);
     printf("Destroying list...\n");
